@@ -1,0 +1,562 @@
+/* 基礎樣式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #faf8ef;
+    color: #776e65;
+    font-size: 18px;
+    line-height: 1.65;
+}
+
+/* 遊戲容器 */
+.game-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 標題和分數區域 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: #776e65;
+}
+
+.score-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-box {
+    background: #bbada0;
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.score-label {
+    font-size: 13px;
+    color: #eee4da;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.score {
+    font-size: 25px;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.1s ease;
+}
+
+.score.updated {
+    animation: score-update 0.3s ease-out;
+}
+
+@keyframes score-update {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.restart-button, .try-again-button {
+    background: #8f7a66;
+    color: #f9f6f2;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.restart-button:hover, .try-again-button:hover {
+    background: #9f8a76;
+    transform: scale(1.05);
+}
+
+.restart-button:active, .try-again-button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* 遊戲板 */
+.game-board {
+    position: relative;
+    background: #bbada0;
+    border-radius: 6px;
+    width: 500px;
+    height: 500px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    /* 硬體加速和性能優化 */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    contain: layout style paint;
+}
+
+/* 網格單元格 */
+.grid-cell {
+    background: rgba(238, 228, 218, 0.35);
+    border-radius: 3px;
+}
+
+/* 遊戲方塊 */
+.tile {
+    position: absolute;
+    width: 112.5px;
+    height: 112.5px;
+    background: #eee4da;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 55px;
+    font-weight: bold;
+    color: #776e65;
+    transition: all 0.15s ease-in-out;
+    z-index: 10;
+    /* 硬體加速優化 */
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+}
+
+/* 新方塊出現動畫 - 硬體加速優化 */
+.tile-new {
+    animation: tile-appear 0.2s ease-out;
+    will-change: transform;
+}
+
+@keyframes tile-appear {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 方塊合併動畫 - 硬體加速優化 */
+.tile-merged {
+    animation: tile-merge 0.2s ease-out;
+    will-change: transform;
+    z-index: 30;
+}
+
+@keyframes tile-merge {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 方塊移動動畫 - 使用transform優化 */
+.tile-moving {
+    transition: left 0.25s ease-out, top 0.25s ease-out;
+    will-change: left, top;
+    z-index: 20;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 遊戲板動畫效果 - 性能優化 */
+.game-board.animating .tile {
+    transition: left 0.25s ease-out, top 0.25s ease-out;
+    will-change: left, top;
+}
+
+/* 不同數值的方塊顏色 */
+.tile-2 { background: #eee4da; color: #776e65; }
+.tile-4 { background: #ede0c8; color: #776e65; }
+.tile-8 { background: #f2b179; color: #f9f6f2; }
+.tile-16 { background: #f59563; color: #f9f6f2; }
+.tile-32 { background: #f67c5f; color: #f9f6f2; }
+.tile-64 { background: #f65e3b; color: #f9f6f2; }
+.tile-128 { background: #edcf72; color: #f9f6f2; font-size: 45px; }
+.tile-256 { background: #edcc61; color: #f9f6f2; font-size: 45px; }
+.tile-512 { background: #edc850; color: #f9f6f2; font-size: 45px; }
+.tile-1024 { background: #edc53f; color: #f9f6f2; font-size: 35px; }
+.tile-2048 { background: #edc22e; color: #f9f6f2; font-size: 35px; }
+
+/* 遊戲訊息覆蓋層 */
+.game-message {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(238, 228, 218, 0.73);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.game-message.show {
+    display: flex;
+    opacity: 1;
+}
+
+.game-message.win-state {
+    background: rgba(237, 194, 46, 0.8);
+    animation: win-glow 2s ease-in-out;
+}
+
+@keyframes win-glow {
+    0%, 100% {
+        background: rgba(238, 228, 218, 0.73);
+    }
+    50% {
+        background: rgba(237, 194, 46, 0.9);
+    }
+}
+
+.message-content {
+    text-align: center;
+    animation: message-bounce 0.5s ease-out;
+}
+
+@keyframes message-bounce {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.message-text {
+    font-size: 60px;
+    font-weight: bold;
+    color: #776e65;
+    margin-bottom: 20px;
+}
+
+.final-score-info {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    font-size: 18px;
+    color: #776e65;
+}
+
+.final-score-info div {
+    margin: 5px 0;
+}
+
+/* 響應式設計 */
+
+/* 高DPI螢幕支援 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .tile {
+        text-rendering: optimizeLegibility;
+    }
+}
+
+/* 超小螢幕 (手機直向) */
+@media (max-width: 480px) {
+    .game-container {
+        padding: 8px;
+        max-width: 100%;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .score-container {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .game-board {
+        width: calc(100vw - 16px);
+        height: calc(100vw - 16px);
+        max-width: 350px;
+        max-height: 350px;
+        margin: 0 auto;
+    }
+    
+    .tile {
+        width: calc(25% - 7.5px);
+        height: calc(25% - 7.5px);
+        font-size: 28px;
+    }
+    
+    .tile-128, .tile-256, .tile-512 {
+        font-size: 24px;
+    }
+    
+    .tile-1024, .tile-2048 {
+        font-size: 20px;
+    }
+    
+    h1 {
+        font-size: 32px;
+    }
+    
+    .message-text {
+        font-size: 32px;
+    }
+    
+    .score-box {
+        min-width: 70px;
+        padding: 8px 15px;
+    }
+    
+    .restart-button, .try-again-button {
+        padding: 8px 15px;
+        font-size: 16px;
+    }
+}
+
+/* 小螢幕 (手機橫向/小平板) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .game-container {
+        padding: 15px;
+        max-width: 90%;
+    }
+    
+    .game-board {
+        width: 100%;
+        height: 100vw;
+        max-width: 450px;
+        max-height: 450px;
+        margin: 0 auto;
+    }
+    
+    .tile {
+        width: calc(25% - 7.5px);
+        height: calc(25% - 7.5px);
+        font-size: 40px;
+    }
+    
+    .tile-128, .tile-256, .tile-512 {
+        font-size: 35px;
+    }
+    
+    .tile-1024, .tile-2048 {
+        font-size: 28px;
+    }
+    
+    h1 {
+        font-size: 42px;
+    }
+    
+    .message-text {
+        font-size: 45px;
+    }
+}
+
+/* 中等螢幕 (平板) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .game-container {
+        padding: 20px;
+        max-width: 600px;
+    }
+    
+    .game-board {
+        width: 500px;
+        height: 500px;
+    }
+}
+
+/* 大螢幕 (桌面) */
+@media (min-width: 1025px) {
+    .game-container {
+        padding: 30px;
+    }
+}
+
+/* 觸控設備優化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 增大觸控目標 */
+    .restart-button, .try-again-button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 20px;
+        font-size: 18px;
+    }
+    
+    /* 移除hover效果，避免觸控設備的粘滯問題 */
+    .restart-button:hover, .try-again-button:hover {
+        background: #8f7a66;
+        transform: scale(1);
+    }
+    
+    /* 增強觸控反饋 */
+    .restart-button:active, .try-again-button:active {
+        background: #7f6a56;
+        transform: scale3d(0.98, 0.98, 1);
+        will-change: transform;
+    }
+    
+    /* 防止觸控時的文字選擇 */
+    .game-board, .tile, .restart-button, .try-again-button {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+    
+    /* 觸控設備上的遊戲板優化 */
+    .game-board {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        /* 移動端性能優化 */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    /* 移動端方塊性能優化 */
+    .tile {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        /* 優化移動端渲染 */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* 移動端動畫優化 */
+    .tile-new, .tile-merged, .tile-moving {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        will-change: transform;
+    }
+    
+    /* 減少移動端重繪 */
+    .game-container {
+        contain: layout style paint;
+    }
+}
+
+/* 橫向模式優化 */
+@media (orientation: landscape) and (max-height: 600px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .header {
+        margin-bottom: 10px;
+    }
+    
+    h1 {
+        font-size: 36px;
+    }
+    
+    .game-board {
+        max-width: 350px;
+        max-height: 350px;
+    }
+    
+    .message-text {
+        font-size: 36px;
+    }
+}
+
+/* 可訪問性增強 */
+@media (prefers-reduced-motion: reduce) {
+    .tile, .score, .game-message, .message-content {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .tile-new, .tile-merged, .tile-moving {
+        animation: none !important;
+    }
+    
+    /* 移除硬體加速以節省資源 */
+    .tile, .game-board {
+        will-change: auto;
+        transform: none;
+    }
+}
+
+/* 性能優化 - 低端設備 */
+@media (max-width: 480px) and (max-height: 800px) {
+    /* 簡化動畫以提升性能 */
+    .tile {
+        transition-duration: 0.1s;
+    }
+    
+    .tile-new {
+        animation-duration: 0.15s;
+    }
+    
+    .tile-merged {
+        animation-duration: 0.1s;
+    }
+    
+    /* 減少陰影和複雜效果 */
+    .game-board {
+        box-shadow: none;
+    }
+}
+
+/* 高對比度模式支援 */
+@media (prefers-contrast: high) {
+    .tile {
+        border: 2px solid #000;
+    }
+    
+    .game-board {
+        border: 3px solid #000;
+    }
+    
+    .restart-button, .try-again-button {
+        border: 2px solid #000;
+    }
+}

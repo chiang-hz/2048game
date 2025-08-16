@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#faf8ef">
+    <title>2048 遊戲</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>2048</h1>
+            <div class="score-container">
+                <div class="score-box">
+                    <div class="score-label">分數</div>
+                    <div class="score" id="score">0</div>
+                </div>
+                <button class="restart-button" id="restart">重新開始</button>
+            </div>
+        </div>
+        
+        <div class="game-board" id="game-board">
+            <!-- 遊戲網格將由JavaScript動態生成 -->
+        </div>
+        
+        <div class="game-message" id="game-message">
+            <div class="message-content">
+                <div class="message-text" id="message-text"></div>
+                <button class="try-again-button" id="try-again">再試一次</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/Board.js"></script>
+    <script src="js/MoveProcessor.js"></script>
+    <script src="js/GameEngine.js"></script>
+    <script src="js/GameUI.js"></script>
+    <script src="js/InputHandler.js"></script>
+    <script src="js/PerformanceOptimizer.js"></script>
+    <script src="js/main.js"></script>
+    <script src="debug-score.js"></script>
+</body>
+</html>
