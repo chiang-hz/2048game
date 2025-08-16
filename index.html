@@ -10,26 +10,52 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="header">
-            <h1>2048</h1>
-            <div class="score-container">
-                <div class="score-box">
-                    <div class="score-label">分數</div>
-                    <div class="score" id="score">0</div>
+    <div class="page-container">
+        <div class="leaderboard" id="leaderboard">
+            <h3>排行榜</h3>
+            <div class="leaderboard-list" id="leaderboard-list">
+                <div class="leaderboard-item">
+                    <span class="rank">1.</span>
+                    <span class="score-value">0</span>
                 </div>
-                <button class="restart-button" id="restart">重新開始</button>
+                <div class="leaderboard-item">
+                    <span class="rank">2.</span>
+                    <span class="score-value">0</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">3.</span>
+                    <span class="score-value">0</span>
+                </div>
             </div>
         </div>
-        
-        <div class="game-board" id="game-board">
-            <!-- 遊戲網格將由JavaScript動態生成 -->
-        </div>
-        
-        <div class="game-message" id="game-message">
-            <div class="message-content">
-                <div class="message-text" id="message-text"></div>
-                <button class="try-again-button" id="try-again">再試一次</button>
+
+        <div class="game-wrapper">
+            <div class="header">
+                <h1>2048</h1>
+                <div class="score-container">
+                    <div class="score-box">
+                        <div class="score-label">分數</div>
+                        <div class="score" id="score">0</div>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-label">最高分</div>
+                        <div class="score" id="best-score">0</div>
+                    </div>
+                    <button class="restart-button" id="restart">重新開始</button>
+                </div>
+            </div>
+            
+            <div class="game-container">
+                <div class="game-board" id="game-board">
+                    <!-- 遊戲網格將由JavaScript動態生成 -->
+                </div>
+                
+                <div class="game-message" id="game-message">
+                    <div class="message-content">
+                        <div class="message-text" id="message-text"></div>
+                        <button class="try-again-button" id="try-again">再試一次</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -40,6 +66,7 @@
     <script src="js/GameUI.js"></script>
     <script src="js/InputHandler.js"></script>
     <script src="js/PerformanceOptimizer.js"></script>
+    <script src="js/ScoreManager.js"></script>
     <script src="js/main.js"></script>
     <script src="debug-score.js"></script>
 </body>
