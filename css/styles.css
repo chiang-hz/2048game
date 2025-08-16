@@ -11,13 +11,27 @@ body {
     color: #776e65;
     font-size: 18px;
     line-height: 1.65;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.page-container {
+    display: flex;
+    gap: 20px;
 }
 
 /* 遊戲容器 */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .game-container {
     max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
+    /* margin: 0 auto; */
+    padding: 0;
 }
 
 /* 標題和分數區域 */
@@ -75,6 +89,63 @@ h1 {
     }
     100% {
         transform: scale(1);
+    }
+}
+
+/* 排行榜樣式 */
+.leaderboard {
+    background: #bbada0;
+    border-radius: 6px;
+    padding: 15px;
+    width: 200px; /* 固定寬度 */
+    text-align: center;
+}
+
+.leaderboard h3 {
+    color: #f9f6f2;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column; /* 垂直排列 */
+    gap: 10px;
+}
+
+.leaderboard-item {
+    background: rgba(238, 228, 218, 0.35);
+    border-radius: 3px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.leaderboard-item .rank {
+    color: #776e65;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.leaderboard-item .score-value {
+    color: #776e65;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.leaderboard-item.highlight {
+    background: #edc22e;
+    animation: highlight-pulse 1s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% {
+        background: #edc22e;
+    }
+    50% {
+        background: #f2b179;
     }
 }
 
