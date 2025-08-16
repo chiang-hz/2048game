@@ -362,7 +362,8 @@ function validateRequiredClasses() {
         { name: 'GameUI', description: '遊戲UI類' },
         { name: 'InputHandler', description: '輸入處理類' },
         { name: 'MoveProcessor', description: '移動處理類' },
-        { name: 'PerformanceOptimizer', description: '性能優化類' }
+        { name: 'PerformanceOptimizer', description: '性能優化類' },
+        { name: 'ScoreManager', description: '分數管理類' }
     ];
     
     const missingClasses = [];

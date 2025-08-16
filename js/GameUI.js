@@ -21,6 +21,9 @@ class GameUI {
             this.animationCallbacks = []; // 動畫完成回調隊列
             this.animationDuration = 250; // 動畫持續時間（毫秒）
             
+            // 初始化分數管理器
+            this.scoreManager = new ScoreManager();
+            
             // 錯誤處理相關
             this.errorCount = 0;
             this.maxErrors = 5;
@@ -246,6 +249,11 @@ class GameUI {
         }
         
         this.scoreElement.textContent = newScore;
+        
+        // 更新最高分顯示
+        if (this.scoreManager) {
+            this.scoreManager.updateDisplay();
+        }
     }
 
     /**
@@ -300,15 +308,33 @@ class GameUI {
      * 顯示失敗狀態並提供重新開始選項
      */
     showGameOver() {
-        this.messageTextElement.textContent = '遊戲結束';
+        const finalScore = this.gameEngine.getScore();
+        const moveCount = this.gameEngine.getMoveCount();
+        
+        // 檢查是否進入排行榜
+        let rankMessage = '';
+        if (this.scoreManager) {
+            const rank = this.scoreManager.checkAndUpdateScore(finalScore);
+            if (rank !== null) {
+                const rankText = ['第一名', '第二名', '第三名'][rank];
+                rankMessage = `<div style="color: #edc22e; font-weight: bold; margin: 10px 0;">🎉 恭喜！您獲得${rankText}！</div>`;
+            }
+        }
+        
+        this.messageTextElement.innerHTML = `
+            <div style="font-size: 48px; margin-bottom: 15px;">遊戲結束!</div>
+            <div class="final-score-info">
+                <div>最終分數: <strong>${finalScore}</strong></div>
+                <div>移動次數: <strong>${moveCount}</strong></div>
+                ${rankMessage}
+            </div>
+        `;
+        
         this.messageElement.classList.add('show');
         
         // 確保重新開始按鈕可見且可用
         this.tryAgainButton.style.display = 'inline-block';
         this.tryAgainButton.textContent = '再試一次';
-        
-        // 顯示最終分數
-        this.showFinalScore();
     }
 
     /**
@@ -570,31 +596,42 @@ class GameUI {
             const targetLeft = boardPadding + newPosition.col * (cellSize + gap);
             const targetTop = boardPadding + newPosition.row * (cellSize + gap);
             
-            // 添加移動動畫類
-            tile.classList.add('tile-moving');
+            // 檢查方塊是否實際移動了
+            const currentLeft = parseInt(tile.style.left) || 0;
+            const currentTop = parseInt(tile.style.top) || 0;
+            const hasMoved = Math.abs(currentLeft - targetLeft) > 1 || Math.abs(currentTop - targetTop) > 1;
             
-            // 設置目標位置
-            tile.style.left = `${targetLeft}px`;
-            tile.style.top = `${targetTop}px`;
-            
-            // 如果是合併的方塊，在動畫中途更新值和樣式
-            if (newPosition.isMerged) {
+            // 只對實際移動或合併的方塊添加動畫
+            if (hasMoved || newPosition.isMerged) {
+                // 添加移動動畫類
+                tile.classList.add('tile-moving');
+                
+                // 設置目標位置
+                tile.style.left = `${targetLeft}px`;
+                tile.style.top = `${targetTop}px`;
+                
+                // 如果是合併的方塊，在動畫中途更新值和樣式
+                if (newPosition.isMerged) {
+                    setTimeout(() => {
+                        tile.textContent = newPosition.value;
+                        tile.className = `tile tile-${newPosition.value} tile-moving tile-merged`;
+                        tile.dataset.value = newPosition.value;
+                    }, this.animationDuration / 2);
+                }
+                
+                // 動畫完成後清理
                 setTimeout(() => {
-                    tile.textContent = newPosition.value;
-                    tile.className = `tile tile-${newPosition.value} tile-moving tile-merged`;
-                    tile.dataset.value = newPosition.value;
-                }, this.animationDuration / 2);
+                    tile.classList.remove('tile-moving', 'tile-merged');
+                    resolve();
+                }, this.animationDuration);
+            } else {
+                // 沒有移動的方塊直接完成
+                resolve();
             }
             
             // 更新位置數據
             tile.dataset.row = newPosition.row;
             tile.dataset.col = newPosition.col;
-            
-            // 動畫完成後清理
-            setTimeout(() => {
-                tile.classList.remove('tile-moving', 'tile-merged');
-                resolve();
-            }, this.animationDuration);
         });
     }
     
